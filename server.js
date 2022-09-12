@@ -1,20 +1,27 @@
+const { app } = require("./app");
+const { initModels } = require("./models/initModels");
+const { db } = require("./utils/db.util");
+const dotenv = require("dotenv");
 
-const {app} = require('../app'); 
-const {db} = require('./utils/db.util.js');
+dotenv.config(".env");
 
 const serverStart = async () => {
-    try {
-        await db.authenticate();
-        await db.sync();
-        PORT = 9000;
-        
-        app.listen(PORT,() =>{
-            console.log("running port 9000 ;D");
-        })
-    } catch (error) {
-        console.log(error);
-    }
-}
+  try {
 
+    await db.authenticate();
+
+    initModels();
+    
+    await db.sync();
+
+    const PORT = process.env.PORT || 9000;
+
+    app.listen(PORT, () => {
+      console.log("running port " + PORT);
+    });
+
+  } catch (error) {
+    console.log(error);
+  }
+};
 serverStart();
-
